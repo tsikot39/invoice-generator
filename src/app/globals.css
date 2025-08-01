@@ -1,26 +1,254 @@
 @import "tailwindcss";
+@import "tw-animate-css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@custom-variant dark (&:is(.dark *));
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+:root {
+  --radius: 0.625rem;
+
+  /* Invoice Generator SaaS Professional Theme */
+  /* Light Mode - Clean, Professional, Business-focused */
+  --background: oklch(0.99 0.002 220); /* Very light blue-gray background */
+  --foreground: oklch(0.15 0.015 220); /* Deep navy text */
+
+  --card: oklch(1 0 0); /* Pure white cards for clarity */
+  --card-foreground: oklch(0.15 0.015 220); /* Deep navy card text */
+
+  --popover: oklch(1 0 0); /* White popover background */
+  --popover-foreground: oklch(0.15 0.015 220); /* Deep navy popover text */
+
+  --primary: oklch(0.25 0.08 220); /* Professional deep navy blue */
+  --primary-foreground: oklch(0.98 0 0); /* Clean white text on primary */
+
+  --secondary: oklch(0.92 0.015 45); /* Warm light gold/cream */
+  --secondary-foreground: oklch(0.25 0.08 220); /* Navy text on secondary */
+
+  --muted: oklch(0.95 0.005 220); /* Very light blue-gray */
+  --muted-foreground: oklch(0.5 0.02 220); /* Medium blue-gray */
+
+  --accent: oklch(0.55 0.12 180); /* Professional teal accent */
+  --accent-foreground: oklch(0.98 0 0); /* White text on accent */
+
+  --destructive: oklch(0.58 0.2 15); /* Professional red for errors */
+  --border: oklch(0.9 0.008 220); /* Light blue-gray borders */
+  --input: oklch(0.98 0.003 220); /* Very light input background */
+  --ring: oklch(0.55 0.12 180); /* Teal focus ring */
+
+  /* Chart colors - Professional business palette */
+  --chart-1: oklch(0.55 0.12 180); /* Primary teal */
+  --chart-2: oklch(0.6 0.15 45); /* Gold/amber */
+  --chart-3: oklch(0.25 0.08 220); /* Deep navy */
+  --chart-4: oklch(0.45 0.1 140); /* Professional green */
+  --chart-5: oklch(0.65 0.15 280); /* Professional purple */
+
+  /* Sidebar - Clean professional navigation */
+  --sidebar: oklch(0.97 0.005 220); /* Light sidebar background */
+  --sidebar-foreground: oklch(0.25 0.08 220); /* Navy sidebar text */
+  --sidebar-primary: oklch(0.25 0.08 220); /* Navy primary elements */
+  --sidebar-primary-foreground: oklch(0.98 0 0); /* White text */
+  --sidebar-accent: oklch(0.92 0.015 45); /* Gold accent in sidebar */
+  --sidebar-accent-foreground: oklch(0.25 0.08 220); /* Navy accent text */
+  --sidebar-border: oklch(0.9 0.008 220); /* Light borders */
+  --sidebar-ring: oklch(0.55 0.12 180); /* Teal focus ring */
+}
+
+.dark {
+  /* Invoice Generator SaaS Dark Mode - Sophisticated & Professional */
+  --background: oklch(0.08 0.01 220); /* Deep navy background */
+  --foreground: oklch(0.95 0.005 220); /* Light blue-white text */
+
+  --card: oklch(0.12 0.015 220); /* Dark navy cards */
+  --card-foreground: oklch(0.95 0.005 220); /* Light text on cards */
+
+  --popover: oklch(0.12 0.015 220); /* Dark navy popover */
+  --popover-foreground: oklch(0.95 0.005 220); /* Light popover text */
+
+  --primary: oklch(0.65 0.15 180); /* Bright teal primary */
+  --primary-foreground: oklch(0.08 0.01 220); /* Dark text on bright primary */
+
+  --secondary: oklch(0.2 0.02 220); /* Dark navy secondary */
+  --secondary-foreground: oklch(0.95 0.005 220); /* Light text on secondary */
+
+  --muted: oklch(0.15 0.015 220); /* Dark blue-gray muted */
+  --muted-foreground: oklch(0.7 0.01 220); /* Medium light muted text */
+
+  --accent: oklch(0.7 0.18 45); /* Warm gold accent for dark mode */
+  --accent-foreground: oklch(0.08 0.01 220); /* Dark text on gold accent */
+
+  --destructive: oklch(0.65 0.2 15); /* Bright red for dark mode */
+  --border: oklch(0.2 0.02 220); /* Dark borders */
+  --input: oklch(0.15 0.015 220); /* Dark input background */
+  --ring: oklch(0.65 0.15 180); /* Bright teal focus ring */
+
+  /* Chart colors - Dark mode business palette */
+  --chart-1: oklch(0.65 0.15 180); /* Bright teal */
+  --chart-2: oklch(0.7 0.18 45); /* Warm gold */
+  --chart-3: oklch(0.8 0.1 220); /* Light navy blue */
+  --chart-4: oklch(0.6 0.15 140); /* Professional green */
+  --chart-5: oklch(0.7 0.18 280); /* Professional purple */
+
+  /* Sidebar - Dark mode navigation */
+  --sidebar: oklch(0.1 0.012 220); /* Very dark sidebar */
+  --sidebar-foreground: oklch(0.9 0.008 220); /* Light sidebar text */
+  --sidebar-primary: oklch(0.65 0.15 180); /* Bright teal primary */
+  --sidebar-primary-foreground: oklch(0.08 0.01 220); /* Dark text on primary */
+  --sidebar-accent: oklch(0.2 0.02 220); /* Dark accent areas */
+  --sidebar-accent-foreground: oklch(0.9 0.008 220); /* Light accent text */
+  --sidebar-border: oklch(0.2 0.02 220); /* Dark borders */
+  --sidebar-ring: oklch(0.65 0.15 180); /* Bright teal focus ring */
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Invoice Generator SaaS Custom Enhancements */
+@layer components {
+  /* Professional card elevation */
+  .invoice-card {
+    box-shadow: 0 1px 3px oklch(0.15 0.015 220 / 0.08),
+      0 1px 2px oklch(0.15 0.015 220 / 0.06);
+    transition: box-shadow 0.2s ease-in-out;
+  }
+
+  .invoice-card:hover {
+    box-shadow: 0 4px 12px oklch(0.15 0.015 220 / 0.12),
+      0 2px 6px oklch(0.15 0.015 220 / 0.08);
+  }
+
+  /* Professional button styling */
+  .btn-primary {
+    background: linear-gradient(
+      135deg,
+      oklch(0.25 0.08 220) 0%,
+      oklch(0.3 0.1 200) 100%
+    );
+    border: 1px solid oklch(0.2 0.06 220);
+    transition: all 0.2s ease-in-out;
+  }
+
+  .btn-primary:hover {
+    background: linear-gradient(
+      135deg,
+      oklch(0.2 0.08 220) 0%,
+      oklch(0.25 0.1 200) 100%
+    );
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px oklch(0.25 0.08 220 / 0.25);
+  }
+
+  /* Success states for financial operations */
+  .success-indicator {
+    background: linear-gradient(
+      135deg,
+      oklch(0.45 0.1 140) 0%,
+      oklch(0.5 0.12 130) 100%
+    );
+    color: white;
+  }
+
+  /* Professional input styling */
+  .invoice-input {
+    border: 1px solid oklch(0.9 0.008 220);
+    background: oklch(0.99 0.002 220);
+    transition: all 0.2s ease-in-out;
+  }
+
+  .invoice-input:focus {
+    border-color: oklch(0.55 0.12 180);
+    background: white;
+    box-shadow: 0 0 0 3px oklch(0.55 0.12 180 / 0.1);
+  }
+
+  /* Financial data styling */
+  .amount-display {
+    font-feature-settings: "tnum" 1;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.025em;
+  }
+
+  /* Status badges */
+  .status-paid {
+    background: oklch(0.45 0.1 140 / 0.1);
+    color: oklch(0.3 0.15 140);
+    border: 1px solid oklch(0.45 0.1 140 / 0.2);
+  }
+
+  .status-pending {
+    background: oklch(0.6 0.15 45 / 0.1);
+    color: oklch(0.4 0.2 45);
+    border: 1px solid oklch(0.6 0.15 45 / 0.2);
+  }
+
+  .status-overdue {
+    background: oklch(0.58 0.2 15 / 0.1);
+    color: oklch(0.4 0.25 15);
+    border: 1px solid oklch(0.58 0.2 15 / 0.2);
+  }
+}
+
+/* Dark mode adjustments */
+@media (prefers-color-scheme: dark) {
+  .invoice-card {
+    box-shadow: 0 1px 3px oklch(0 0 0 / 0.2), 0 1px 2px oklch(0 0 0 / 0.15);
+  }
+
+  .invoice-card:hover {
+    box-shadow: 0 4px 12px oklch(0 0 0 / 0.3), 0 2px 6px oklch(0 0 0 / 0.2);
+  }
+
+  .invoice-input {
+    background: oklch(0.15 0.015 220);
+    border-color: oklch(0.2 0.02 220);
+  }
+
+  .invoice-input:focus {
+    background: oklch(0.12 0.015 220);
+    border-color: oklch(0.65 0.15 180);
+  }
 }

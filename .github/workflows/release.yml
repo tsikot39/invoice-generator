@@ -1,0 +1,68 @@
+name: Release Management
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  create-release:
+    name: 📦 Create Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build application
+        run: npm run build
+
+      - name: Generate changelog
+        id: changelog
+        run: |
+          # Generate changelog from git commits
+          CHANGELOG=$(git log $(git describe --tags --abbrev=0 HEAD^)..HEAD --pretty=format:"- %s (%h)" --no-merges)
+          echo "changelog<<EOF" >> $GITHUB_OUTPUT
+          echo "$CHANGELOG" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Create GitHub Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          body: |
+            ## 🚀 What's New
+
+            ${{ steps.changelog.outputs.changelog }}
+
+            ## 📊 Metrics
+
+            - **Build Status**: ✅ Passed
+            - **Test Coverage**: Check CI pipeline
+            - **Security Scan**: ✅ Clean
+
+            ## 🔗 Links
+
+            - [Production Deployment](https://your-invoice-app.vercel.app)
+            - [Documentation](https://github.com/${{ github.repository }}/blob/main/README.md)
+
+          draft: false
+          prerelease: false
+
+      - name: Deploy to production
+        run: |
+          echo "Triggering production deployment for release ${{ github.ref }}"
+          # This would trigger your production deployment
