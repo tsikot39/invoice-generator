@@ -1,12 +1,7 @@
 import { redirect } from 'next/navigation';
-import { auth } from '@/lib/auth-helper';
 
-export default async function HomePage() {
-  const session = await auth();
-
-  if (session?.user) {
-    redirect('/dashboard');
-  } else {
-    redirect('/auth/signin');
-  }
+// Use a simple redirect without session checking to avoid JWT errors
+export default function HomePage() {
+  // Let the middleware handle the authentication logic
+  redirect('/auth/signin');
 }

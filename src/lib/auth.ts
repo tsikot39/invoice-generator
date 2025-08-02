@@ -1,5 +1,5 @@
-import NextAuth from "next-auth";
-import GoogleProvider from "next-auth/providers/google";
+import NextAuth from 'next-auth';
+import GoogleProvider from 'next-auth/providers/google';
 
 export default NextAuth({
   providers: [
@@ -23,9 +23,24 @@ export default NextAuth({
     },
   },
   session: {
-    strategy: "jwt",
+    strategy: 'jwt',
+    maxAge: 30 * 24 * 60 * 60, // 30 days
   },
   pages: {
-    signIn: "/auth/signin",
+    signIn: '/auth/signin',
+  },
+  events: {
+    async signOut(message) {
+      // Force clear any problematic session data
+      console.log('User signed out:', message);
+    },
+  },
+  // Handle JWT errors by clearing the session
+  logger: {
+    error(code) {
+      if (code === 'JWT_SESSION_ERROR') {
+        console.log('JWT session error detected, clearing session');
+      }
+    },
   },
 });

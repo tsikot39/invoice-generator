@@ -122,6 +122,13 @@ export class CacheService {
   private useMemoryFallback = false;
 
   async initialize() {
+    // Check if caching is enabled
+    if (!config.cache.enabled) {
+      console.log('Cache disabled in configuration, using memory fallback');
+      this.useMemoryFallback = true;
+      return;
+    }
+
     try {
       this.redis = await connectRedis();
       this.useMemoryFallback = false;
@@ -224,7 +231,13 @@ export class CacheService {
 // Create singleton instance
 export const cache = new CacheService();
 
-// Initialize cache on module load
-cache.initialize().catch(console.error);
+// Initialize cache on module load only if cache is enabled
+if (config.cache.enabled) {
+  cache.initialize().catch(error => {
+    console.warn('Cache initialization failed, falling back to memory cache:', error);
+  });
+} else {
+  console.log('Cache disabled, using memory-only cache');
+}
 
 export default cache;

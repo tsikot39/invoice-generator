@@ -1,10 +1,10 @@
-import { NextRequest, NextResponse } from "next/server";
-import { Resend } from "resend";
-import { auth } from "@/lib/auth-helper";
-import dbConnect from "@/lib/mongodb";
-import { InvoiceModel, ClientModel } from "@/lib/models";
-import { Settings } from "@/models/Settings";
-import { getDefaultCompanyInfo } from "@/lib/settings-helper";
+import { NextRequest, NextResponse } from 'next/server';
+import { Resend } from 'resend';
+import { auth } from '@/lib/auth-helper';
+import dbConnect from '@/lib/mongodb';
+import { InvoiceModel, ClientModel } from '@/lib/models';
+import { Settings } from '@/models/Settings';
+import { getDefaultCompanyInfo } from '@/lib/settings-helper';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -13,7 +13,7 @@ export async function POST(request: NextRequest) {
     const session = await auth();
 
     if (!session?.user?.email) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const body = await request.json();
@@ -23,11 +23,7 @@ export async function POST(request: NextRequest) {
 
     // If specific invoice ID provided, send reminder for that invoice
     if (invoiceId) {
-      const result = await sendReminderForInvoice(
-        session.user.email,
-        invoiceId,
-        manualTrigger
-      );
+      const result = await sendReminderForInvoice(session.user.email, invoiceId, manualTrigger);
       return NextResponse.json(result);
     }
 
@@ -35,11 +31,8 @@ export async function POST(request: NextRequest) {
     const result = await sendOverdueReminders(session.user.email);
     return NextResponse.json(result);
   } catch (error) {
-    console.error("Overdue reminder error:", error);
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 }
-    );
+    console.error('Overdue reminder error:', error);
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
 
@@ -51,27 +44,23 @@ async function sendReminderForInvoice(
   const invoice = await InvoiceModel.findById(invoiceId);
 
   if (!invoice || invoice.userId !== userId) {
-    return { error: "Invoice not found", status: 404 };
+    return { error: 'Invoice not found', status: 404 };
   }
 
-  if (invoice.status !== "overdue") {
-    return { error: "Invoice is not overdue", status: 400 };
+  if (invoice.status !== 'overdue') {
+    return { error: 'Invoice is not overdue', status: 400 };
   }
 
   const client = await ClientModel.findById(invoice.clientId);
   if (!client || !client.email) {
-    return { error: "Client email not found", status: 400 };
+    return { error: 'Client email not found', status: 400 };
   }
 
   // Check user's notification preferences
   const userSettings = await Settings.findOne({ userId });
-  if (
-    !manualTrigger &&
-    userSettings &&
-    !userSettings.notifications.overdueReminders
-  ) {
+  if (!manualTrigger && userSettings && !userSettings.notifications.overdueReminders) {
     return {
-      message: "Overdue reminders are disabled in settings",
+      message: 'Overdue reminders are disabled in settings',
       skipped: true,
     };
   }
@@ -79,19 +68,16 @@ async function sendReminderForInvoice(
   // Calculate days overdue
   const today = new Date();
   const dueDate = new Date(invoice.dueDate);
-  const daysOverdue = Math.floor(
-    (today.getTime() - dueDate.getTime()) / (1000 * 60 * 60 * 24)
-  );
+  const daysOverdue = Math.floor((today.getTime() - dueDate.getTime()) / (1000 * 60 * 60 * 24));
 
   // Check if we've sent a reminder recently (within last 7 days)
   if (!manualTrigger && invoice.lastReminderSent) {
     const daysSinceLastReminder = Math.floor(
-      (today.getTime() - invoice.lastReminderSent.getTime()) /
-        (1000 * 60 * 60 * 24)
+      (today.getTime() - invoice.lastReminderSent.getTime()) / (1000 * 60 * 60 * 24)
     );
     if (daysSinceLastReminder < 7) {
       return {
-        message: "Reminder already sent recently",
+        message: 'Reminder already sent recently',
         skipped: true,
         daysSinceLastReminder,
       };
@@ -106,7 +92,7 @@ async function sendReminderForInvoice(
 
   // Send reminder email
   const { data, error } = await resend.emails.send({
-    from: process.env.RESEND_FROM_EMAIL || "noreply@yourcompany.com",
+    from: process.env.RESEND_FROM_EMAIL || 'noreply@yourcompany.com',
     to: [client.email],
     subject: `Payment Reminder: Invoice ${invoice.invoiceNumber} is ${daysOverdue} days overdue`,
     html: generateReminderEmailHtml({
@@ -118,15 +104,15 @@ async function sendReminderForInvoice(
   });
 
   if (error) {
-    console.error("Failed to send reminder email:", error);
-    return { error: "Failed to send reminder email", details: error.message };
+    console.error('Failed to send reminder email:', error);
+    return { error: 'Failed to send reminder email', details: error.message };
   }
 
   // Update invoice with reminder info
   await InvoiceModel.findByIdAndUpdate(invoiceId, {
     $push: {
       remindersSent: {
-        type: "overdue",
+        type: 'overdue',
         sentAt: new Date(),
         daysOverdue,
       },
@@ -146,7 +132,7 @@ async function sendOverdueReminders(userId: string) {
   // Find all overdue invoices for this user
   const overdueInvoices = await InvoiceModel.find({
     userId,
-    status: "overdue",
+    status: 'overdue',
   });
 
   const results = [];
@@ -156,11 +142,7 @@ async function sendOverdueReminders(userId: string) {
 
   for (const invoice of overdueInvoices) {
     try {
-      const result = await sendReminderForInvoice(
-        userId,
-        invoice._id.toString(),
-        false
-      );
+      const result = await sendReminderForInvoice(userId, invoice._id.toString(), false);
       results.push({
         invoiceId: invoice._id,
         invoiceNumber: invoice.invoiceNumber,
@@ -175,14 +157,11 @@ async function sendOverdueReminders(userId: string) {
         errorCount++;
       }
     } catch (error) {
-      console.error(
-        `Failed to send reminder for invoice ${invoice.invoiceNumber}:`,
-        error
-      );
+      console.error(`Failed to send reminder for invoice ${invoice.invoiceNumber}:`, error);
       results.push({
         invoiceId: invoice._id,
         invoiceNumber: invoice.invoiceNumber,
-        error: "Failed to process reminder",
+        error: 'Failed to process reminder',
       });
       errorCount++;
     }
@@ -233,7 +212,7 @@ function generateReminderEmailHtml({
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <title>Payment Reminder</title>
       <style>
-        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+        body { font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #333; }
         .container { max-width: 600px; margin: 0 auto; padding: 20px; }
         .header { background-color: #f8f9fa; padding: 20px; border-radius: 5px; margin-bottom: 20px; }
         .content { padding: 20px 0; }
@@ -248,8 +227,8 @@ function generateReminderEmailHtml({
         <div class="header">
           <h1>${companyInfo.name}</h1>
           <p>${companyInfo.address}</p>
-          ${companyInfo.phone ? `<p>Phone: ${companyInfo.phone}</p>` : ""}
-          ${companyInfo.email ? `<p>Email: ${companyInfo.email}</p>` : ""}
+          ${companyInfo.phone ? `<p>Phone: ${companyInfo.phone}</p>` : ''}
+          ${companyInfo.email ? `<p>Email: ${companyInfo.email}</p>` : ''}
         </div>
 
         <div class="content">
@@ -282,9 +261,9 @@ function generateReminderEmailHtml({
         <div class="footer">
           <p><strong>Best regards,</strong></p>
           <p>${companyInfo.name}</p>
-          ${companyInfo.email ? `<p>Email: ${companyInfo.email}</p>` : ""}
-          ${companyInfo.phone ? `<p>Phone: ${companyInfo.phone}</p>` : ""}
-          ${companyInfo.website ? `<p>Website: ${companyInfo.website}</p>` : ""}
+          ${companyInfo.email ? `<p>Email: ${companyInfo.email}</p>` : ''}
+          ${companyInfo.phone ? `<p>Phone: ${companyInfo.phone}</p>` : ''}
+          ${companyInfo.website ? `<p>Website: ${companyInfo.website}</p>` : ''}
         </div>
       </div>
     </body>

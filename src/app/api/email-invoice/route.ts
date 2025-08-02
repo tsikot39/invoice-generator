@@ -1,38 +1,32 @@
-import { NextRequest, NextResponse } from "next/server";
-import { Resend } from "resend";
-import { auth } from "@/lib/auth-helper";
-import dbConnect from "@/lib/mongodb";
-import { InvoiceModel, ClientModel } from "@/lib/models";
-import { getInvoicePDFBlob } from "@/lib/pdf-generator";
-import { Settings } from "@/models/Settings";
-import { getDefaultCompanyInfo } from "@/lib/settings-helper";
+import { NextRequest, NextResponse } from 'next/server';
+import { Resend } from 'resend';
+import { auth } from '@/lib/auth-helper';
+import dbConnect from '@/lib/mongodb';
+import { InvoiceModel, ClientModel } from '@/lib/models';
+import { getInvoicePDFBlob } from '@/lib/pdf-generator';
+import { Settings } from '@/models/Settings';
+import { getDefaultCompanyInfo } from '@/lib/settings-helper';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 export const POST = async (request: NextRequest): Promise<NextResponse> => {
   try {
-    console.log("Email invoice POST route hit!");
+    console.log('Email invoice POST route hit!');
 
     const session = await auth();
     if (!session?.user?.email) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     if (!process.env.RESEND_API_KEY) {
-      return NextResponse.json(
-        { error: "Email service not configured" },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: 'Email service not configured' }, { status: 500 });
     }
 
     const { invoiceId } = await request.json();
-    console.log("Invoice ID:", invoiceId);
+    console.log('Invoice ID:', invoiceId);
 
     if (!invoiceId) {
-      return NextResponse.json(
-        { error: "Invoice ID is required" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Invoice ID is required' }, { status: 400 });
     }
 
     await dbConnect();
@@ -40,27 +34,24 @@ export const POST = async (request: NextRequest): Promise<NextResponse> => {
     const invoice = await InvoiceModel.findById(invoiceId);
 
     if (!invoice) {
-      return NextResponse.json({ error: "Invoice not found" }, { status: 404 });
+      return NextResponse.json({ error: 'Invoice not found' }, { status: 404 });
     }
 
     if (invoice.userId !== session.user.email) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
     }
 
     const client = await ClientModel.findById(invoice.clientId);
 
     if (!client) {
-      return NextResponse.json({ error: "Client not found" }, { status: 400 });
+      return NextResponse.json({ error: 'Client not found' }, { status: 400 });
     }
 
     if (!client.email) {
-      return NextResponse.json(
-        { error: "Client email not found" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Client email not found' }, { status: 400 });
     }
 
-    console.log("Sending to client:", client.email);
+    console.log('Sending to client:', client.email);
 
     // Get company info from settings or use defaults
     let companyInfo = getDefaultCompanyInfo();
@@ -72,7 +63,7 @@ export const POST = async (request: NextRequest): Promise<NextResponse> => {
         companyInfo = userSettings.companyInfo;
       }
     } catch (error) {
-      console.warn("Failed to fetch user settings, using defaults:", error);
+      console.warn('Failed to fetch user settings, using defaults:', error);
     }
 
     const pdfData = {
@@ -86,13 +77,10 @@ export const POST = async (request: NextRequest): Promise<NextResponse> => {
       },
       client: {
         ...client.toObject(),
-        userId: client.userId || "",
+        userId: client.userId || '',
         createdAt: new Date(client.createdAt || Date.now()),
         updatedAt: new Date(client.updatedAt || Date.now()),
-        address:
-          typeof client.address === "string"
-            ? client.address
-            : "No address provided",
+        address: typeof client.address === 'string' ? client.address : 'No address provided',
       },
       companyInfo,
     };
@@ -101,16 +89,16 @@ export const POST = async (request: NextRequest): Promise<NextResponse> => {
     const pdfBuffer = Buffer.from(await pdfBlob.arrayBuffer());
 
     const { data, error } = await resend.emails.send({
-      from: process.env.RESEND_FROM_EMAIL || "noreply@yourcompany.com",
+      from: process.env.RESEND_FROM_EMAIL || 'noreply@yourcompany.com',
       to: [client.email],
-      subject: `Invoice ${invoice.invoiceNumber} from ${session.user.name || "Your Business"}`,
+      subject: `Invoice ${invoice.invoiceNumber} from ${session.user.name || 'Your Business'}`,
       html: `
         <!DOCTYPE html>
         <html>
           <head>
             <meta charset="utf-8">
             <style>
-              body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+              body { font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #333; }
               .container { max-width: 600px; margin: 0 auto; padding: 20px; }
               .header { background-color: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 20px; }
               .invoice-details { background-color: #fff; border: 1px solid #e9ecef; padding: 15px; border-radius: 5px; margin: 15px 0; }
@@ -120,7 +108,7 @@ export const POST = async (request: NextRequest): Promise<NextResponse> => {
           <body>
             <div class="container">
               <div class="header">
-                <h2>New Invoice from ${session.user.name || "Your Business"}</h2>
+                <h2>New Invoice from ${session.user.name || 'Your Business'}</h2>
               </div>
               
               <p>Hello ${client.name},</p>
@@ -138,7 +126,7 @@ export const POST = async (request: NextRequest): Promise<NextResponse> => {
               
               <div class="footer">
                 <p>Thank you for your business!</p>
-                <p>${session.user.name || "Your Business"}</p>
+                <p>${session.user.name || 'Your Business'}</p>
                 <p>${session.user.email}</p>
               </div>
             </div>
@@ -154,22 +142,22 @@ export const POST = async (request: NextRequest): Promise<NextResponse> => {
     });
 
     if (error) {
-      console.error("Resend error:", error);
+      console.error('Resend error:', error);
       return NextResponse.json(
-        { error: "Failed to send email: " + error.message },
+        { error: 'Failed to send email: ' + error.message },
         { status: 500 }
       );
     }
 
-    console.log("Email sent successfully:", data?.id);
+    console.log('Email sent successfully:', data?.id);
 
     // Update invoice status to sent and add sent timestamp
     await InvoiceModel.findByIdAndUpdate(invoiceId, {
-      status: "sent",
+      status: 'sent',
       sentAt: new Date(),
     });
 
-    console.log("Invoice status updated to sent");
+    console.log('Invoice status updated to sent');
 
     return NextResponse.json({
       success: true,
@@ -177,10 +165,7 @@ export const POST = async (request: NextRequest): Promise<NextResponse> => {
       emailId: data?.id,
     });
   } catch (error) {
-    console.error("Email invoice error:", error);
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 }
-    );
+    console.error('Email invoice error:', error);
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 };

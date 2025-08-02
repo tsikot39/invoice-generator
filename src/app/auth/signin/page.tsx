@@ -1,9 +1,9 @@
-import { Metadata } from "next";
-import { SignInForm } from "@/components/auth/signin-form";
+import { Metadata } from 'next';
+import { SignInForm } from '@/components/auth/signin-form';
 
 export const metadata: Metadata = {
-  title: "Sign In | Invoice Generator",
-  description: "Sign in to your account",
+  title: 'Sign In | Invoice Generator',
+  description: 'Sign in to your account',
 };
 
 export default function SignInPage() {
@@ -43,13 +43,7 @@ export default function SignInPage() {
                 className="text-white/90"
               >
                 {/* Background Circle for Depth */}
-                <circle
-                  cx="100"
-                  cy="80"
-                  r="75"
-                  fill="url(#backgroundGradient)"
-                  opacity="0.1"
-                />
+                <circle cx="100" cy="80" r="75" fill="url(#backgroundGradient)" opacity="0.1" />
 
                 {/* Main Invoice Document */}
                 <rect
@@ -84,23 +78,8 @@ export default function SignInPage() {
                 />
 
                 {/* Invoice Number Badge */}
-                <rect
-                  x="105"
-                  y="38"
-                  width="28"
-                  height="8"
-                  rx="4"
-                  fill="url(#badgeGradient)"
-                />
-                <rect
-                  x="107"
-                  y="40.5"
-                  width="24"
-                  height="3"
-                  rx="1.5"
-                  fill="white"
-                  opacity="0.9"
-                />
+                <rect x="105" y="38" width="28" height="8" rx="4" fill="url(#badgeGradient)" />
+                <rect x="107" y="40.5" width="24" height="3" rx="1.5" fill="white" opacity="0.9" />
 
                 {/* Invoice Items */}
                 <rect
@@ -179,23 +158,10 @@ export default function SignInPage() {
                   fill="currentColor"
                   opacity="0.8"
                 />
-                <rect
-                  x="105"
-                  y="91"
-                  width="28"
-                  height="4"
-                  rx="2"
-                  fill="url(#totalGradient)"
-                />
+                <rect x="105" y="91" width="28" height="4" rx="2" fill="url(#totalGradient)" />
 
                 {/* Currency Symbol */}
-                <circle
-                  cx="35"
-                  cy="65"
-                  r="15"
-                  fill="url(#currencyGradient)"
-                  opacity="0.9"
-                />
+                <circle cx="35" cy="65" r="15" fill="url(#currencyGradient)" opacity="0.9" />
                 <text
                   x="35"
                   y="70"
@@ -219,42 +185,10 @@ export default function SignInPage() {
                 />
 
                 {/* Chart Bars */}
-                <rect
-                  x="155"
-                  y="65"
-                  width="3"
-                  height="8"
-                  rx="1.5"
-                  fill="white"
-                  opacity="0.9"
-                />
-                <rect
-                  x="161"
-                  y="60"
-                  width="3"
-                  height="13"
-                  rx="1.5"
-                  fill="white"
-                  opacity="0.9"
-                />
-                <rect
-                  x="167"
-                  y="55"
-                  width="3"
-                  height="18"
-                  rx="1.5"
-                  fill="white"
-                  opacity="0.9"
-                />
-                <rect
-                  x="173"
-                  y="62"
-                  width="3"
-                  height="11"
-                  rx="1.5"
-                  fill="white"
-                  opacity="0.9"
-                />
+                <rect x="155" y="65" width="3" height="8" rx="1.5" fill="white" opacity="0.9" />
+                <rect x="161" y="60" width="3" height="13" rx="1.5" fill="white" opacity="0.9" />
+                <rect x="167" y="55" width="3" height="18" rx="1.5" fill="white" opacity="0.9" />
+                <rect x="173" y="62" width="3" height="11" rx="1.5" fill="white" opacity="0.9" />
 
                 {/* Growth Arrow */}
                 <path
@@ -267,43 +201,13 @@ export default function SignInPage() {
                 />
 
                 {/* Floating Elements for Modern Feel */}
-                <circle
-                  cx="45"
-                  cy="35"
-                  r="3"
-                  fill="currentColor"
-                  opacity="0.3"
-                />
-                <circle
-                  cx="155"
-                  cy="25"
-                  r="2"
-                  fill="currentColor"
-                  opacity="0.4"
-                />
-                <circle
-                  cx="25"
-                  cy="110"
-                  r="2.5"
-                  fill="currentColor"
-                  opacity="0.3"
-                />
-                <circle
-                  cx="175"
-                  cy="120"
-                  r="2"
-                  fill="currentColor"
-                  opacity="0.4"
-                />
+                <circle cx="45" cy="35" r="3" fill="currentColor" opacity="0.3" />
+                <circle cx="155" cy="25" r="2" fill="currentColor" opacity="0.4" />
+                <circle cx="25" cy="110" r="2.5" fill="currentColor" opacity="0.3" />
+                <circle cx="175" cy="120" r="2" fill="currentColor" opacity="0.4" />
 
                 {/* Professional Badge/Seal */}
-                <circle
-                  cx="165"
-                  cy="105"
-                  r="12"
-                  fill="url(#sealGradient)"
-                  opacity="0.9"
-                />
+                <circle cx="165" cy="105" r="12" fill="url(#sealGradient)" opacity="0.9" />
                 <path
                   d="M160 105 L163 108 L170 100"
                   stroke="white"
@@ -314,90 +218,42 @@ export default function SignInPage() {
                 />
 
                 <defs>
-                  <linearGradient
-                    id="backgroundGradient"
-                    x1="0%"
-                    y1="0%"
-                    x2="100%"
-                    y2="100%"
-                  >
+                  <linearGradient id="backgroundGradient" x1="0%" y1="0%" x2="100%" y2="100%">
                     <stop offset="0%" stopColor="rgba(255,255,255,0.1)" />
                     <stop offset="100%" stopColor="rgba(255,255,255,0.05)" />
                   </linearGradient>
 
-                  <linearGradient
-                    id="invoiceGradient"
-                    x1="0%"
-                    y1="0%"
-                    x2="100%"
-                    y2="100%"
-                  >
+                  <linearGradient id="invoiceGradient" x1="0%" y1="0%" x2="100%" y2="100%">
                     <stop offset="0%" stopColor="rgba(255,255,255,0.95)" />
                     <stop offset="100%" stopColor="rgba(255,255,255,0.85)" />
                   </linearGradient>
 
-                  <linearGradient
-                    id="badgeGradient"
-                    x1="0%"
-                    y1="0%"
-                    x2="100%"
-                    y2="100%"
-                  >
+                  <linearGradient id="badgeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
                     <stop offset="0%" stopColor="#10B981" />
                     <stop offset="100%" stopColor="#059669" />
                   </linearGradient>
 
-                  <linearGradient
-                    id="totalGradient"
-                    x1="0%"
-                    y1="0%"
-                    x2="100%"
-                    y2="100%"
-                  >
+                  <linearGradient id="totalGradient" x1="0%" y1="0%" x2="100%" y2="100%">
                     <stop offset="0%" stopColor="#F59E0B" />
                     <stop offset="100%" stopColor="#D97706" />
                   </linearGradient>
 
-                  <linearGradient
-                    id="currencyGradient"
-                    x1="0%"
-                    y1="0%"
-                    x2="100%"
-                    y2="100%"
-                  >
+                  <linearGradient id="currencyGradient" x1="0%" y1="0%" x2="100%" y2="100%">
                     <stop offset="0%" stopColor="#3B82F6" />
                     <stop offset="100%" stopColor="#1D4ED8" />
                   </linearGradient>
 
-                  <linearGradient
-                    id="chartGradient"
-                    x1="0%"
-                    y1="0%"
-                    x2="100%"
-                    y2="100%"
-                  >
+                  <linearGradient id="chartGradient" x1="0%" y1="0%" x2="100%" y2="100%">
                     <stop offset="0%" stopColor="#8B5CF6" />
                     <stop offset="100%" stopColor="#7C3AED" />
                   </linearGradient>
 
-                  <linearGradient
-                    id="arrowGradient"
-                    x1="0%"
-                    y1="0%"
-                    x2="100%"
-                    y2="100%"
-                  >
+                  <linearGradient id="arrowGradient" x1="0%" y1="0%" x2="100%" y2="100%">
                     <stop offset="0%" stopColor="#10B981" />
                     <stop offset="100%" stopColor="#059669" />
                   </linearGradient>
 
-                  <linearGradient
-                    id="sealGradient"
-                    x1="0%"
-                    y1="0%"
-                    x2="100%"
-                    y2="100%"
-                  >
+                  <linearGradient id="sealGradient" x1="0%" y1="0%" x2="100%" y2="100%">
                     <stop offset="0%" stopColor="#10B981" />
                     <stop offset="100%" stopColor="#059669" />
                   </linearGradient>
@@ -405,13 +261,13 @@ export default function SignInPage() {
               </svg>
             </div>
 
-            <div className="space-y-3">
-              <h2 className="text-3xl lg:text-4xl font-bold tracking-tight whitespace-nowrap">
+            <div className="space-y-4">
+              <h2 className="text-4xl lg:text-5xl xl:text-6xl font-bold tracking-tight text-center break-words">
                 Professional Invoicing Made Simple
               </h2>
-              <p className="text-lg text-zinc-300">
-                Create, manage, and track your invoices with ease. Perfect for
-                freelancers and small businesses.
+              <p className="text-xl lg:text-2xl text-zinc-300 font-medium leading-relaxed text-center">
+                Create, manage, and track your invoices with ease. Perfect for freelancers and small
+                businesses.
               </p>
             </div>
           </div>
@@ -420,27 +276,19 @@ export default function SignInPage() {
       <div className="lg:p-8">
         <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
           <div className="flex flex-col space-y-2 text-center">
-            <h1 className="text-2xl font-semibold tracking-tight">
-              Sign in to your account
-            </h1>
+            <h1 className="text-2xl font-semibold tracking-tight">Sign in to your account</h1>
             <p className="text-sm text-muted-foreground">
               Enter your email below to sign in to your account
             </p>
           </div>
           <SignInForm />
           <p className="px-8 text-center text-sm text-muted-foreground">
-            By clicking continue, you agree to our{" "}
-            <a
-              href="/terms"
-              className="underline underline-offset-4 hover:text-primary"
-            >
+            By clicking continue, you agree to our{' '}
+            <a href="/terms" className="underline underline-offset-4 hover:text-primary">
               Terms of Service
-            </a>{" "}
-            and{" "}
-            <a
-              href="/privacy"
-              className="underline underline-offset-4 hover:text-primary"
-            >
+            </a>{' '}
+            and{' '}
+            <a href="/privacy" className="underline underline-offset-4 hover:text-primary">
               Privacy Policy
             </a>
             .

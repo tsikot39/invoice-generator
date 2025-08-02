@@ -1,6 +1,6 @@
-import jsPDF from "jspdf";
-import { Invoice, Client } from "@/types";
-import { formatCurrency } from "./utils-invoice";
+import jsPDF from 'jspdf';
+import { Invoice, Client } from '@/types';
+import { formatCurrency } from './utils-invoice';
 
 export interface InvoicePDFData {
   invoice: Invoice;
@@ -19,13 +19,13 @@ export function generateInvoicePDF(data: InvoicePDFData): jsPDF {
 
   // Create new PDF document
   const doc = new jsPDF({
-    orientation: "portrait",
-    unit: "mm",
-    format: "a4",
+    orientation: 'portrait',
+    unit: 'mm',
+    format: 'a4',
   });
 
   // Set font
-  doc.setFont("helvetica");
+  doc.setFont('arial');
 
   // Colors
   const primaryColor: [number, number, number] = [52, 152, 219]; // Blue
@@ -64,11 +64,7 @@ export function generateInvoicePDF(data: InvoicePDFData): jsPDF {
   yPosition += 10;
   doc.setFontSize(32);
   doc.setTextColor(...primaryColor);
-  doc.text(
-    "INVOICE",
-    pageWidth - margin - doc.getTextWidth("INVOICE"),
-    yPosition
-  );
+  doc.text('INVOICE', pageWidth - margin - doc.getTextWidth('INVOICE'), yPosition);
 
   // Invoice Details
   yPosition += 15;
@@ -101,17 +97,13 @@ export function generateInvoicePDF(data: InvoicePDFData): jsPDF {
   };
 
   doc.setTextColor(...(statusColors[invoice.status] || statusColors.draft));
-  doc.text(
-    `Status: ${invoice.status.toUpperCase()}`,
-    invoiceDetailsX,
-    yPosition
-  );
+  doc.text(`Status: ${invoice.status.toUpperCase()}`, invoiceDetailsX, yPosition);
 
   // Client Information
   yPosition += 20;
   doc.setFontSize(14);
   doc.setTextColor(...textColor);
-  doc.text("Bill To:", margin, yPosition);
+  doc.text('Bill To:', margin, yPosition);
   yPosition += 8;
 
   doc.setFontSize(12);
@@ -138,9 +130,7 @@ export function generateInvoicePDF(data: InvoicePDFData): jsPDF {
       yPosition += 6;
     }
 
-    const cityStateZip = [address.city, address.state, address.zipCode]
-      .filter(Boolean)
-      .join(", ");
+    const cityStateZip = [address.city, address.state, address.zipCode].filter(Boolean).join(', ');
     if (cityStateZip) {
       doc.text(cityStateZip, margin, yPosition);
       yPosition += 6;
@@ -156,25 +146,19 @@ export function generateInvoicePDF(data: InvoicePDFData): jsPDF {
   yPosition += 15;
 
   // Table headers
-  const tableHeaders = [
-    "Description",
-    "Qty",
-    "Unit Price",
-    "Tax Rate",
-    "Total",
-  ];
+  const tableHeaders = ['Description', 'Qty', 'Unit Price', 'Tax Rate', 'Total'];
   const columnWidths = [80, 20, 30, 25, 30];
   const tableStartX = margin;
   const tableStartY = yPosition;
 
   // Header background
   doc.setFillColor(...lightGray);
-  doc.rect(tableStartX, tableStartY - 3, pageWidth - 2 * margin, 8, "F");
+  doc.rect(tableStartX, tableStartY - 3, pageWidth - 2 * margin, 8, 'F');
 
   // Header text
   doc.setFontSize(10);
   doc.setTextColor(...textColor);
-  doc.setFont("helvetica", "bold");
+  doc.setFont('arial', 'bold');
 
   let currentX = tableStartX;
   tableHeaders.forEach((header, index) => {
@@ -185,7 +169,7 @@ export function generateInvoicePDF(data: InvoicePDFData): jsPDF {
   yPosition += 10;
 
   // Table rows
-  doc.setFont("helvetica", "normal");
+  doc.setFont('arial', 'normal');
 
   invoice.items.forEach((item, index) => {
     // Check if we need a new page
@@ -199,12 +183,12 @@ export function generateInvoicePDF(data: InvoicePDFData): jsPDF {
     // Alternate row background
     if (index % 2 === 1) {
       doc.setFillColor(248, 249, 250);
-      doc.rect(tableStartX, yPosition - 3, pageWidth - 2 * margin, 8, "F");
+      doc.rect(tableStartX, yPosition - 3, pageWidth - 2 * margin, 8, 'F');
     }
 
     // Item data
     const rowData = [
-      item.name + (item.description ? ` - ${item.description}` : ""),
+      item.name + (item.description ? ` - ${item.description}` : ''),
       item.quantity.toString(),
       formatCurrency(item.unitPrice),
       `${item.taxRate}%`,
@@ -234,7 +218,7 @@ export function generateInvoicePDF(data: InvoicePDFData): jsPDF {
   yPosition += 10;
   const totalsX = pageWidth - margin - 60;
 
-  doc.setFont("helvetica", "normal");
+  doc.setFont('arial', 'normal');
   doc.text(`Subtotal: ${formatCurrency(invoice.subtotal)}`, totalsX, yPosition);
   yPosition += 6;
 
@@ -242,11 +226,7 @@ export function generateInvoicePDF(data: InvoicePDFData): jsPDF {
   yPosition += 6;
 
   if (invoice.discountAmount && invoice.discountAmount > 0) {
-    doc.text(
-      `Discount: -${formatCurrency(invoice.discountAmount)}`,
-      totalsX,
-      yPosition
-    );
+    doc.text(`Discount: -${formatCurrency(invoice.discountAmount)}`, totalsX, yPosition);
     yPosition += 6;
   }
 
@@ -255,24 +235,21 @@ export function generateInvoicePDF(data: InvoicePDFData): jsPDF {
   doc.line(totalsX, yPosition, pageWidth - margin, yPosition);
   yPosition += 8;
 
-  doc.setFont("helvetica", "bold");
+  doc.setFont('arial', 'bold');
   doc.setFontSize(14);
   doc.text(`Total: ${formatCurrency(invoice.total)}`, totalsX, yPosition);
 
   // Notes
   if (invoice.notes) {
     yPosition += 20;
-    doc.setFont("helvetica", "bold");
+    doc.setFont('arial', 'bold');
     doc.setFontSize(12);
-    doc.text("Notes:", margin, yPosition);
+    doc.text('Notes:', margin, yPosition);
     yPosition += 8;
 
-    doc.setFont("helvetica", "normal");
+    doc.setFont('arial', 'normal');
     doc.setFontSize(10);
-    const noteLines = doc.splitTextToSize(
-      invoice.notes,
-      pageWidth - 2 * margin
-    );
+    const noteLines = doc.splitTextToSize(invoice.notes, pageWidth - 2 * margin);
     doc.text(noteLines, margin, yPosition);
     yPosition += noteLines.length * 5;
   }
@@ -280,17 +257,14 @@ export function generateInvoicePDF(data: InvoicePDFData): jsPDF {
   // Terms and Conditions
   if (invoice.termsAndConditions) {
     yPosition += 10;
-    doc.setFont("helvetica", "bold");
+    doc.setFont('arial', 'bold');
     doc.setFontSize(12);
-    doc.text("Terms and Conditions:", margin, yPosition);
+    doc.text('Terms and Conditions:', margin, yPosition);
     yPosition += 8;
 
-    doc.setFont("helvetica", "normal");
+    doc.setFont('arial', 'normal');
     doc.setFontSize(10);
-    const termLines = doc.splitTextToSize(
-      invoice.termsAndConditions,
-      pageWidth - 2 * margin
-    );
+    const termLines = doc.splitTextToSize(invoice.termsAndConditions, pageWidth - 2 * margin);
     doc.text(termLines, margin, yPosition);
   }
 
@@ -298,17 +272,14 @@ export function generateInvoicePDF(data: InvoicePDFData): jsPDF {
   const footerY = pageHeight - 20;
   doc.setFontSize(8);
   doc.setTextColor(127, 140, 141);
-  doc.text("Thank you for your business!", pageWidth / 2, footerY, {
-    align: "center",
+  doc.text('Thank you for your business!', pageWidth / 2, footerY, {
+    align: 'center',
   });
 
   return doc;
 }
 
-export function downloadInvoicePDF(
-  data: InvoicePDFData,
-  filename?: string
-): void {
+export function downloadInvoicePDF(data: InvoicePDFData, filename?: string): void {
   const doc = generateInvoicePDF(data);
   const finalFilename = filename || `invoice-${data.invoice.invoiceNumber}.pdf`;
   doc.save(finalFilename);
@@ -316,5 +287,5 @@ export function downloadInvoicePDF(
 
 export function getInvoicePDFBlob(data: InvoicePDFData): Blob {
   const doc = generateInvoicePDF(data);
-  return doc.output("blob");
+  return doc.output('blob');
 }

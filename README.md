@@ -198,6 +198,7 @@ skills:
 - **Language**: **TypeScript** with strict type checking for bulletproof code
   quality
 - **Styling**: **Tailwind CSS** for rapid, maintainable UI development
+- **Typography**: **Poppins font** for clean, modern, and highly readable design
 - **Components**: **Shadcn/ui** for accessible, beautiful design system
 - **Forms**: **React Hook Form + Zod** for type-safe form validation
 
