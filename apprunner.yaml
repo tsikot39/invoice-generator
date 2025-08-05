@@ -1,5 +1,5 @@
 version: 1.0
-runtime: nodejs20
+runtime: nodejs18
 build:
   commands:
     build:
@@ -14,7 +14,7 @@ build:
     - name: SKIP_ENV_VALIDATION
       value: "true"
 run:
-  runtime-version: 20
+  runtime-version: 18
   command: npm start
   network:
     port: 3000
